@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,13 +22,20 @@ public class CustomerController {
 	@Autowired
 	CustomerRepo customerRepo;
 
-	@GetMapping(path="/",produces="application/json")
+	@GetMapping(path = "/", produces = "application/json")
 	public ResponseEntity<Iterable<Customer>> listCustomers() {
 		Iterable<Customer> customers = customerRepo.findAll();
 		return ResponseEntity.ok().body(customers);
 	}
 
-	@PostMapping(path="/add", produces="application/json")
+	@GetMapping(path = "/{custId}", produces = "application/json")
+	public Customer getCustomer(@PathVariable int custId) {
+		System.out.println(custId);
+		Customer customerData = customerRepo.findByCustId(custId);
+		return customerData;
+	}
+
+	@PostMapping(path = "/add", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<CustomerResponse> addCustomer(@RequestBody Customer customer) {
 		System.out.println(customer.toString());
 		CustomerResponse response = new CustomerResponse();
@@ -45,12 +53,12 @@ public class CustomerController {
 		return new ResponseEntity<CustomerResponse>(response, HttpStatus.CONFLICT);
 	}
 
-	@PutMapping(path="/update", produces = "application/json")
+	@PutMapping(path = "/update", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<CustomerResponse> updateCustomer(@RequestBody Customer customer) {
 		System.out.println(customer.toString());
 		CustomerResponse resp = new CustomerResponse();
 		try {
-			 Customer customerForUpdate = customerRepo.findByCustId(customer.getCustId());
+			Customer customerForUpdate = customerRepo.findByCustId(customer.getCustId());
 			customerForUpdate.setCustName(customer.getCustName());
 			customerForUpdate.setPrime(customer.isPrime());
 			customerForUpdate.setMobile(customer.getMobile());
@@ -65,10 +73,10 @@ public class CustomerController {
 			resp.setMessage("The Entered custId is Not Found to Update");
 			return new ResponseEntity<CustomerResponse>(resp, HttpStatus.NOT_FOUND);
 		}
-		
+
 	}
 
-	@DeleteMapping(path="/delete",produces="application/json")
+	@DeleteMapping(path = "/delete", produces = "application/json")
 	public ResponseEntity<CustomerResponse> deleteCustomer(@RequestBody Customer customer) {
 		System.out.println(customer.getCustId());
 		CustomerResponse response = new CustomerResponse();
