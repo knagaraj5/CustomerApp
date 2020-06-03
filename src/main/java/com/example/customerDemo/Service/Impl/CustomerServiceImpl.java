@@ -68,9 +68,9 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public ResponseEntity<CustomerResponse> deleteCustomer(Customer customer) {
+	public ResponseEntity<CustomerResponse> deleteCustomer(int custId) {
 		CustomerResponse response = new CustomerResponse();
-		Integer isDeleted = customerRepo.deleteByCustId(customer.getCustId());
+		Integer isDeleted = customerRepo.deleteByCustId(custId);
 		if (isDeleted == 1) {
 			response.setHttpStatus(HttpStatus.OK);
 			response.setStatusCode(200);

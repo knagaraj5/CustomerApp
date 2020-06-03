@@ -9,6 +9,6 @@ public interface CustomerService {
 	public ResponseEntity<Iterable<Customer>> listCustomers();
 	public ResponseEntity<CustomerResponse> addCustomer(Customer customer);
 	public ResponseEntity<CustomerResponse> updateCustomer(Customer customer);
-	public ResponseEntity<CustomerResponse> deleteCustomer(Customer customer);
+	public ResponseEntity<CustomerResponse> deleteCustomer(int custId);
 
 }
