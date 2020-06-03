@@ -43,7 +43,7 @@ public class CustomerServiceImpl implements CustomerService {
 			response.setMessage("The entered custId is already present");
 			return new ResponseEntity<CustomerResponse>(response, HttpStatus.CONFLICT);
 		}
-		return new ResponseEntity<CustomerResponse>(response, HttpStatus.CONFLICT);
+		return new ResponseEntity<CustomerResponse>(response, HttpStatus.CREATED);
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class CustomerServiceImpl implements CustomerService {
 			response.setHttpStatus(HttpStatus.NOT_FOUND);
 			response.setMessage("The Entered custId Not Found to Delete");
 			response.setStatusCode(404);
-			return new ResponseEntity<CustomerResponse>(response, HttpStatus.OK);
+			return new ResponseEntity<CustomerResponse>(response, HttpStatus.NOT_FOUND);
 		}
 	}
 
