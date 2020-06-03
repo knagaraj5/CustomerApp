@@ -35,21 +35,21 @@ public class CustomerController {
 		return customerService.getCustomer(custId);
 	}
 
-	@PostMapping(path = "/add", consumes = "application/json", produces = "application/json")
+	@PostMapping(path = "/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<CustomerResponse> addCustomer(@RequestBody Customer customer) {
 		System.out.println(customer.toString());
 		return customerService.addCustomer(customer);
 	}
 
-	@PutMapping(path = "/update", consumes = "application/json", produces = "application/json")
+	@PutMapping(path = "/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<CustomerResponse> updateCustomer(@RequestBody Customer customer) {
 		System.out.println(customer.toString());
 		return customerService.updateCustomer(customer);
 	}
 
-	@DeleteMapping(path = "/delete", produces = "application/json")
-	public ResponseEntity<CustomerResponse> deleteCustomer(@RequestBody Customer customer) {
-		System.out.println(customer.getCustId());
-		return customerService.deleteCustomer(customer);
+	@DeleteMapping(path = "/{custId}", produces = "application/json")
+	public ResponseEntity<CustomerResponse> deleteCustomer(@PathVariable int custId) {
+		System.out.println(custId);
+		return customerService.deleteCustomer(custId);
 	}
 }
