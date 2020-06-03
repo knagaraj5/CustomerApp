@@ -12,7 +12,7 @@ public class InputValidator {
 		if(customer.getCustName()== null) {
 			errorMessage = errorMessage.concat("custName is Missing");
 		}
-		if(customer.getMobile()== 0) {
+		if(customer.getMobile()== null) {
 			errorMessage = errorMessage.concat("mobile is Missing");
 		}
 		return errorMessage;

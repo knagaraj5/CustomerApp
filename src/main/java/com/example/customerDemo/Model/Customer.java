@@ -19,14 +19,14 @@ public class Customer {
 	private String custName;
 	@Value("false")
 	private boolean isPrime;
-	private int mobile;
+	private String mobile;
 	
 	public Customer() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Customer(int custId, String custName, boolean isPrime, int mobile) {
+	public Customer(int custId, String custName, boolean isPrime, String mobile) {
 		super();
 		this.custId = custId;
 		this.custName = custName;
@@ -58,11 +58,11 @@ public class Customer {
 		this.isPrime = isPrime;
 	}
 
-	public int getMobile() {
+	public String getMobile() {
 		return mobile;
 	}
 
-	public void setMobile(int mobile) {
+	public void setMobile(String mobile) {
 		this.mobile = mobile;
 	}
 

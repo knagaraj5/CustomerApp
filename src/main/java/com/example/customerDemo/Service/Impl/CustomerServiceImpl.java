@@ -32,6 +32,14 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public ResponseEntity<CustomerResponse> addCustomer(Customer customer) {
 		CustomerResponse response = new CustomerResponse();
+		Customer customerData = customerRepo.findByCustId(customer.getCustId());
+		Boolean isPresent = customerRepo.existsByCustId(customer.getCustId());
+		if (isPresent) {
+			response.setHttpStatus(HttpStatus.CONFLICT);
+			response.setStatusCode(409);
+			response.setMessage("The entered custId is already present");
+			return new ResponseEntity<CustomerResponse>(response, HttpStatus.CONFLICT);
+		}
 		try {
 			customerRepo.save(customer);
 			response.setHttpStatus(HttpStatus.CREATED);

@@ -29,7 +29,7 @@ class CustomerAppApplicationTests {
 
 		final String baseUrl = "http://localhost:" + 5555 + "/customer/";
 		URI uri = new URI(baseUrl);
-		Customer customer = new Customer(999, "TESTNAME", true, 987);
+		Customer customer = new Customer(999, "TESTNAME", true, "987");
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("X-COM-PERSIST", "true");

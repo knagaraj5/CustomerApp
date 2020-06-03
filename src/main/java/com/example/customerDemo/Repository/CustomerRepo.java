@@ -20,4 +20,6 @@ public interface CustomerRepo extends CrudRepository<Customer, Integer>{
 
 	Customer findByCustId(int custId);
 
+	Boolean existsByCustId(int custId);
+
 }
