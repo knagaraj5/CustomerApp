@@ -2,6 +2,7 @@ package com.example.customerDemo.Repository;
 
 import java.util.Optional;
 
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.customerDemo.Model.Customer;
 
 @Repository
-public interface CustomerRepo extends CrudRepository<Customer, Integer>{
+public interface CustomerRepo extends MongoRepository<Customer, String>{
 
 	Customer findBycustId(int custId);
 

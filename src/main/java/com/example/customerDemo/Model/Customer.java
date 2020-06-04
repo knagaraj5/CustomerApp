@@ -1,29 +1,17 @@
 package com.example.customerDemo.Model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-
-
-@Entity
-@Table
+@Document(collection = "customer")
 public class Customer {
-	@Id
-	@GeneratedValue
-	private int id;
 	private int custId;
 	private String custName;
-	@Value("false")
 	private boolean isPrime;
 	private String mobile;
 	
 	public Customer() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Customer(int custId, String custName, boolean isPrime, String mobile) {

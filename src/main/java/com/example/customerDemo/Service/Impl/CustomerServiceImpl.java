@@ -1,6 +1,10 @@
 package com.example.customerDemo.Service.Impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -14,12 +18,12 @@ import com.example.customerDemo.Service.CustomerService;
 public class CustomerServiceImpl implements CustomerService {
 	@Autowired
 	CustomerRepo customerRepo;
+	@Autowired
+	MongoTemplate mongoTemplate;
 
 	@Override
 	public Customer getCustomer(int custId) {
-		System.out.println("In Impl" + custId);
 		Customer customerData = customerRepo.findByCustId(custId);
-		System.out.println("in impl result" + customerData);
 		return customerData;
 	}
 
@@ -32,9 +36,8 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public ResponseEntity<CustomerResponse> addCustomer(Customer customer) {
 		CustomerResponse response = new CustomerResponse();
-		Customer customerData = customerRepo.findByCustId(customer.getCustId());
 		Boolean isPresent = customerRepo.existsByCustId(customer.getCustId());
-		if (isPresent) {
+		if (isPresent == true) {
 			response.setHttpStatus(HttpStatus.CONFLICT);
 			response.setStatusCode(409);
 			response.setMessage("The entered custId is already present");
@@ -45,33 +48,44 @@ public class CustomerServiceImpl implements CustomerService {
 			response.setHttpStatus(HttpStatus.CREATED);
 			response.setStatusCode(200);
 			response.setMessage("Successfully Added");
+			return new ResponseEntity<CustomerResponse>(response, HttpStatus.CREATED);
 		} catch (Exception e) {
 			response.setHttpStatus(HttpStatus.CONFLICT);
 			response.setStatusCode(409);
-			response.setMessage("The entered custId is already present");
+			response.setMessage(e.getMessage());
 			return new ResponseEntity<CustomerResponse>(response, HttpStatus.CONFLICT);
 		}
-		return new ResponseEntity<CustomerResponse>(response, HttpStatus.CREATED);
 	}
 
 	@Override
 	public ResponseEntity<CustomerResponse> updateCustomer(Customer customer) {
-		CustomerResponse resp = new CustomerResponse();
+		CustomerResponse response = new CustomerResponse();
+		Query isExistQuery = new Query();
+		Query updateQuery = new Query();
+		isExistQuery.addCriteria(Criteria.where("custId").is(customer.getCustId()));
+		Customer isPresent = mongoTemplate.findOne(isExistQuery, Customer.class);
+		if (isPresent == null) {
+			response.setHttpStatus(HttpStatus.NOT_FOUND);
+			response.setStatusCode(409);
+			response.setMessage("The Entered custId is Not Found to Update");
+			return new ResponseEntity<CustomerResponse>(response, HttpStatus.NOT_FOUND);
+		}
 		try {
-			Customer customerForUpdate = customerRepo.findByCustId(customer.getCustId());
-			customerForUpdate.setCustName(customer.getCustName());
-			customerForUpdate.setPrime(customer.isPrime());
-			customerForUpdate.setMobile(customer.getMobile());
-			customerRepo.save(customerForUpdate);
-			resp.setHttpStatus(HttpStatus.OK);
-			resp.setStatusCode(200);
-			resp.setMessage("Successfully Updated");
-			return new ResponseEntity<CustomerResponse>(resp, HttpStatus.OK);
+			updateQuery.addCriteria(Criteria.where("custId").is(customer.getCustId()));
+			updateQuery.fields().include("custId");
+			Update update = new Update();
+			update.set("custName", customer.getCustName());
+			update.set("mobile", customer.getMobile());
+			mongoTemplate.updateFirst(updateQuery, update, Customer.class);
+			response.setHttpStatus(HttpStatus.OK);
+			response.setStatusCode(200);
+			response.setMessage("Successfully Updated");
+			return new ResponseEntity<CustomerResponse>(response, HttpStatus.OK);
 		} catch (Exception e) {
-			resp.setHttpStatus(HttpStatus.NOT_FOUND);
-			resp.setStatusCode(409);
-			resp.setMessage("The Entered custId is Not Found to Update");
-			return new ResponseEntity<CustomerResponse>(resp, HttpStatus.NOT_FOUND);
+			response.setHttpStatus(HttpStatus.NOT_FOUND);
+			response.setStatusCode(409);
+			response.setMessage(e.getMessage());
+			return new ResponseEntity<CustomerResponse>(response, HttpStatus.NOT_FOUND);
 		}
 	}
 

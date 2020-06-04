@@ -1,6 +1,7 @@
 package com.example.customerDemo.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,17 +34,14 @@ public class CustomerController {
 
 	@GetMapping(path = "/{custId}", produces = "application/json")
 	public Customer getCustomer(@PathVariable int custId) {	
-		System.out.println("In Controller"+custId);
 		return customerService.getCustomer(custId);
 	}
 
 	@PostMapping(path = "/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<CustomerResponse> addCustomer(@RequestBody Customer customer) {
-		System.out.println(customer.toString());
 		InputValidator validator = new InputValidator();
 		CustomerResponse response = new CustomerResponse();
 		String errorMessage=validator.validate(customer);
-		System.out.println(errorMessage);
 		if(errorMessage!="") {
 			response.setStatusCode(400);
 			response.setMessage(errorMessage);
@@ -56,11 +54,9 @@ public class CustomerController {
 
 	@PutMapping(path = "/", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<CustomerResponse> updateCustomer(@RequestBody Customer customer) {
-		System.out.println(customer.toString());
 		CustomerResponse response = new CustomerResponse();
 		InputValidator validator = new InputValidator();
 		String errorMessage=validator.validate(customer);
-		System.out.println(errorMessage);
 		if(errorMessage!="") {
 			response.setStatusCode(400);
 			response.setMessage(errorMessage);
@@ -72,7 +68,6 @@ public class CustomerController {
 
 	@DeleteMapping(path = "/{custId}", produces = "application/json")
 	public ResponseEntity<CustomerResponse> deleteCustomer(@PathVariable int custId) {
-		System.out.println(custId);
 		return customerService.deleteCustomer(custId);
 	}
 }

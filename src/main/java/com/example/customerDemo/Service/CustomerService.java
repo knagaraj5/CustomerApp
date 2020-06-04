@@ -10,5 +10,4 @@ public interface CustomerService {
 	public ResponseEntity<CustomerResponse> addCustomer(Customer customer);
 	public ResponseEntity<CustomerResponse> updateCustomer(Customer customer);
 	public ResponseEntity<CustomerResponse> deleteCustomer(int custId);
-
 }
